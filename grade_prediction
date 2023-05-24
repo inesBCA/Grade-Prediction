@@ -15,19 +15,45 @@ predict ="G3"
 
 X = np.array(data.drop(predict, axis=1))
 y = np.array(data["G3"])
-
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size = 0.1)
-
-linear = linear_model.LinearRegression()
-#create fit line
-linear.fit(x_train, y_train)
-#test accuracy
+#read in pickle file
+pickle_in = open("studentmodel.pickle","rb")
+linear=pickle.load(pickle_in)
 acc = linear.score(x_test, y_test)
+#save the best model
+"""
+best = 0
+for _ in range(30):
+    x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size = 0.1)
+
+    linear = linear_model.LinearRegression()
+    #create fit line
+    linear.fit(x_train, y_train)
+
+    if acc > best:
+        best = acc
+        print(acc)
+    #pickle it
+        with open("studentmodel.pickle","wb") as f:
+            pickle.dump(linear,f)
+
+"""
+
+#test accuracy
+
 print(acc)
 print('Coefficient: \n', linear.coef_)
 print('Intercept: \n', linear.intercept_)
-
+print(acc)
 predictions = linear.predict(x_test)
 #Predictions loop
 for x in range(len(predictions)):
     print(predictions[x], x_test[x], y_test[x])
+
+#make plot 
+p="G1"
+style.use("ggplot")
+pyplot.scatter(data[p],data["G3"])
+pyplot.xlabel(p)
+pyplot.ylabel("Final Grade")
+pyplot.show()
